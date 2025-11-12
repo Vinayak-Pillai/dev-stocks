@@ -10,10 +10,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   imports: [
     UsersModule,
 
-    // ✅ Loads .env
     ConfigModule.forRoot({ isGlobal: true }),
 
-    // ✅ Uses ConfigService to get JWT_SECRET
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
