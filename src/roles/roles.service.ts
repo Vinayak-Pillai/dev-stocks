@@ -1,15 +1,31 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { DRIZZLE, type TDrizzleDB } from '@/database/database.module';
+import { roles } from '@/database/schema';
+import { eq } from 'drizzle-orm';
 
 @Injectable()
 export class RolesService {
-  create(createRoleDto: CreateRoleDto) {
-    return 'This action adds a new role';
+  constructor(@Inject(DRIZZLE) private db: TDrizzleDB) {}
+
+  async create(createRoleDto: CreateRoleDto) {
+    const insertRoleId = await this.db.insert(roles).values(createRoleDto);
+    return { status: true, records: [insertRoleId] };
   }
 
-  findAll() {
-    return `This action returns all roles`;
+  async findAll(status: 'Y' | 'N' | '') {
+    console.log({ status });
+    const rolesData = await this.db
+      .select()
+      .from(roles)
+      .where(status ? eq(roles.role_is_active, status) : undefined);
+
+    if (!rolesData || !rolesData.length) {
+      return { status: false, message: 'No roles', records: rolesData };
+    }
+
+    return { status: true, records: rolesData, message: 'Records fetched' };
   }
 
   findOne(id: number) {

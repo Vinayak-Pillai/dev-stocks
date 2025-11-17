@@ -24,9 +24,15 @@ const seedData = async () => {
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync('devstocks@0@0', salt);
 
-  await db
-    .insert(schema.users)
-    .values([{ username: 'superadmin', password: hash, role_id: 1 }]);
+  await db.insert(schema.users).values([
+    {
+      username: 'superadmin',
+      password: hash,
+      role_id: 1,
+      email: 'superadmin@devstocks.co.in',
+      phone: 1234568970,
+    },
+  ]);
 
   console.log('✅Users seeeded....');
 

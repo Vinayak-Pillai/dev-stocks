@@ -32,6 +32,26 @@ export class CreateUserDto implements InferInsertModel<typeof users> {
   @IsOptional()
   last_name: string;
 
+  @IsString()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  phone: number;
+
+  @IsString()
+  @IsOptional()
+  address: string;
+
+  @IsString()
+  @IsOptional()
+  city: string;
+
+  @IsString()
+  @IsOptional()
+  pincode: string;
+
   @IsNumber()
   role_id: number;
 

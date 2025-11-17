@@ -25,6 +25,7 @@ export class UsersService {
 
       return { status: true, records: insertUserId };
     } catch (error: unknown) {
+      console.log(error);
       if (error instanceof Error) {
         throw new BadRequestException(error.message);
       }
@@ -39,6 +40,10 @@ export class UsersService {
           user_id: users.user_id,
           role_id: users.role_id,
           username: users.username,
+          first_name: users.first_name,
+          email: users.email,
+          phone: users.phone,
+          last_name: users.last_name,
           is_active: users.is_active,
           created_at: users.created_at,
         })
@@ -60,16 +65,24 @@ export class UsersService {
     }
   }
 
-  async findOne(username: string) {
+  async findOne(username: string, is_auth: boolean = false) {
     try {
+      console.log({ username, is_auth });
       const usersData = await this.db
         .select({
           user_id: users.user_id,
           role_id: users.role_id,
-          password: users.password,
           username: users.username,
+          first_name: users.first_name,
+          email: users.email,
+          phone: users.phone,
+          last_name: users.last_name,
+          address: users.address,
+          city: users.city,
+          pincode: users.pincode,
           is_active: users.is_active,
           created_at: users.created_at,
+          ...(is_auth ? { password: users.password } : {}),
         })
         .from(users)
         .where(eq(users.username, username));

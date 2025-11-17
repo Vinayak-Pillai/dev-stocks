@@ -11,7 +11,7 @@ export class AuthService {
   ) {}
 
   async signIn(paramsUserName: string, paramsPassword: string) {
-    const userData = await this.usersService.findOne(paramsUserName);
+    const userData = await this.usersService.findOne(paramsUserName, true);
     console.log({ userData: userData.records });
 
     if (
