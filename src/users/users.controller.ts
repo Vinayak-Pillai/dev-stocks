@@ -11,6 +11,8 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from '@/utils/decorators';
+import { type TAuthData } from '@/types/auth';
 
 @Controller('users')
 export class UsersController {
@@ -32,7 +34,12 @@ export class UsersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @User() user: TAuthData,
+  ) {
+    updateUserDto['updated_by'] = user.user_id;
     return this.usersService.update(+id, updateUserDto);
   }
 

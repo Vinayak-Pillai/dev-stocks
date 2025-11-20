@@ -36,7 +36,7 @@ export class CreateUserDto implements InferInsertModel<typeof users> {
   @IsNotEmpty()
   email: string;
 
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
   phone: number;
 

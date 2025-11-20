@@ -5,6 +5,77 @@ import { Pool } from 'pg';
 import bcrypt from 'bcryptjs';
 configDotenv();
 
+const uomData = [
+  {
+    uom_code: 'PCS',
+    uom_name: 'Pieces',
+    uom_multiplier: 1,
+    uom_si_unit: 'N',
+  },
+  {
+    uom_code: 'KG',
+    uom_name: 'Kilogram',
+    uom_multiplier: 1,
+    uom_si_unit: 'Y',
+  },
+  {
+    uom_code: 'G',
+    uom_name: 'Gram',
+    uom_multiplier: 0.001,
+    uom_si_unit: 'Y',
+  },
+  { uom_code: 'L', uom_name: 'Liter', uom_multiplier: 1, uom_si_unit: 'Y' },
+  {
+    uom_code: 'ML',
+    uom_name: 'Milliliter',
+    uom_multiplier: 0.001,
+    uom_si_unit: 'Y',
+  },
+  { uom_code: 'M', uom_name: 'Meter', uom_multiplier: 1, uom_si_unit: 'Y' },
+  {
+    uom_code: 'CM',
+    uom_name: 'Centimeter',
+    uom_multiplier: 0.01,
+    uom_si_unit: 'Y',
+  },
+  {
+    uom_code: 'FT',
+    uom_name: 'Feet',
+    uom_multiplier: 0.3048,
+    uom_si_unit: 'N',
+  },
+  {
+    uom_code: 'BOX',
+    uom_name: 'Box',
+    uom_multiplier: 1,
+    uom_si_unit: 'N',
+  },
+  {
+    uom_code: 'PKT',
+    uom_name: 'Packet',
+    uom_multiplier: 1,
+    uom_si_unit: 'N',
+  },
+  {
+    uom_code: 'SET',
+    uom_name: 'Set',
+    uom_multiplier: 1,
+    uom_si_unit: 'N',
+  },
+  {
+    uom_code: 'PAIR',
+    uom_name: 'Pair',
+    uom_multiplier: 1,
+    uom_si_unit: 'N',
+  },
+  {
+    uom_code: 'DOZ',
+    uom_name: 'Dozen',
+    uom_multiplier: 12,
+    uom_si_unit: 'N',
+  },
+];
+
 const seedData = async () => {
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL!,
@@ -35,6 +106,13 @@ const seedData = async () => {
   ]);
 
   console.log('✅Users seeeded....');
+
+  await db.insert(schema.uom).values(
+    uomData.map((uom) => {
+      return { ...uom, uom_multiplier: String(uom.uom_multiplier) };
+    }),
+  );
+  console.log('✅UOM seeeded....');
 
   await pool.end();
   console.log('Seeding completed...');

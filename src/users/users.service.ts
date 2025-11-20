@@ -81,7 +81,7 @@ export class UsersService {
           city: users.city,
           pincode: users.pincode,
           is_active: users.is_active,
-          created_at: users.created_at,
+          // created_at: users.created_at,
           ...(is_auth ? { password: users.password } : {}),
         })
         .from(users)
