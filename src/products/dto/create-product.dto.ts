@@ -1,12 +1,5 @@
 import { products } from '@/database/schema';
-import {
-  IsString,
-  IsNotEmpty,
-  IsOptional,
-  IsInt,
-  IsIn,
-  IsUrl,
-} from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsInt, IsIn } from 'class-validator';
 import { InferInsertModel } from 'drizzle-orm';
 
 export class CreateProductDto implements InferInsertModel<typeof products> {

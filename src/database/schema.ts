@@ -7,6 +7,7 @@ import { pgEnum } from 'drizzle-orm/pg-core';
 
 export const isUserActiveEnum = pgEnum('user_is_acitve', ['Y', 'N', 'A']);
 export const isRoleActiveEnum = pgEnum('user_is_acitve', ['Y', 'N', 'A']);
+export const STATUS_ENUM = pgEnum('status_enum', ['Y', 'N', 'A']);
 
 export const roles = pgTable('roles', {
   role_id: serial('role_id').primaryKey(),
@@ -63,6 +64,44 @@ export const products = pgTable('products', {
   product_is_active: productStatusEnum('product_is_active')
     .default('Y')
     .notNull(),
+  created_at: timestamp('created_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  created_by: integer('created_by').notNull(),
+  updated_at: timestamp('updated_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updated_by: integer('updated_by').notNull(),
+});
+
+export const taxes = pgTable('taxes', {
+  tax_id: serial('tax_id').primaryKey(),
+  tax_name: varchar('tax_name', { length: 255 }).notNull(),
+  tax_code: varchar('tax_code', { length: 50 }).notNull().unique(),
+  tax_is_active: STATUS_ENUM('tax_is_active').default('Y').notNull(),
+  description: varchar('tax_description'),
+  created_at: timestamp('created_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  created_by: integer('created_by').notNull(),
+  updated_at: timestamp('updated_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updated_by: integer('updated_by').notNull(),
+});
+
+export const tax_types = pgTable('tax_types', {
+  tax_type_id: serial('tax_type_id').primaryKey(),
+  tax_id: integer('tax_id')
+    .references(() => taxes.tax_id, { onDelete: 'cascade' })
+    .notNull(),
+  tax_type_name: varchar('tax_type_name', { length: 255 }).notNull(),
+  tax_type_percentage: numeric('tax_type_percentage', {
+    precision: 10,
+    scale: 4,
+  }).notNull(),
+  tax_type_is_active: STATUS_ENUM('tax_type_is_active').default('Y'),
+  priority: integer('priority').default(1).notNull(),
   created_at: timestamp('created_at', { withTimezone: true })
     .defaultNow()
     .notNull(),

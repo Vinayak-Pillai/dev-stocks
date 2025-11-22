@@ -14,6 +14,8 @@ import { ProductsModule } from './products/products.module';
 import { UploadModule } from './upload/upload.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { TaxModule } from './tax/tax.module';
+import { TaxTypesModule } from './tax_types/tax_types.module';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { join } from 'path';
       rootPath: join(__dirname, '..', '..', 'uploads'),
       serveRoot: '/uploads',
     }),
+    TaxModule,
+    TaxTypesModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,0 +1,46 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
+import { TaxService } from './tax.service';
+import { CreateTaxDto } from './dto/create-tax.dto';
+import { UpdateTaxDto } from './dto/update-tax.dto';
+import { User } from '@/utils/decorators';
+import type { TAuthData } from '@/types/auth';
+
+@Controller('tax')
+export class TaxController {
+  constructor(private readonly taxService: TaxService) {}
+
+  @Post()
+  create(@Body() createTaxDto: CreateTaxDto, @User() user: TAuthData) {
+    createTaxDto['created_by'] = user.user_id;
+    return this.taxService.create(createTaxDto);
+  }
+
+  @Get()
+  findAll(@Query('status') status: 'Y' | 'N' | '') {
+    return this.taxService.findAll(status);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.taxService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateTaxDto: UpdateTaxDto) {
+    return this.taxService.update(+id, updateTaxDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.taxService.remove(+id);
+  }
+}

@@ -57,6 +57,20 @@
       "when": 1763661174582,
       "tag": "20251120175254_rich_jack_flag",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1763797006449,
+      "tag": "20251122073646_curved_shaman",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1763801441911,
+      "tag": "20251122085041_cold_ink",
+      "breakpoints": true
     }
   ]
 }
