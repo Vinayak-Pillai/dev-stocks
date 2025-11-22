@@ -9,8 +9,12 @@ import { tax_types } from '@/database/schema';
 @Injectable()
 export class TaxTypesService {
   constructor(@Inject(DRIZZLE) private db: TDrizzleDB) {}
-  async create(createTaxTypeDto: CreateTaxTypeDto) {
-    const taxId = await this.db
+  async create(
+    createTaxTypeDto: CreateTaxTypeDto[],
+    trx?: TDrizzleDB | Parameters<Parameters<TDrizzleDB['transaction']>[0]>[0],
+  ) {
+    const dbClient = trx ?? this.db;
+    const taxId = await dbClient
       .insert(tax_types)
       .values(createTaxTypeDto)
       .returning({ id: tax_types.tax_type_id });
@@ -48,8 +52,13 @@ export class TaxTypesService {
     return response;
   }
 
-  async update(id: number, updateTaxTypeDto: UpdateTaxTypeDto) {
-    await this.db
+  async update(
+    id: number,
+    updateTaxTypeDto: UpdateTaxTypeDto,
+    trx?: TDrizzleDB | Parameters<Parameters<TDrizzleDB['transaction']>[0]>[0],
+  ) {
+    const dbClient = trx ?? this.db;
+    await dbClient
       .update(tax_types)
       .set(updateTaxTypeDto)
       .where(eq(tax_types.tax_type_id, id));

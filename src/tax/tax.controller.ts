@@ -7,10 +7,11 @@ import {
   Param,
   Delete,
   Query,
+  Put,
 } from '@nestjs/common';
 import { TaxService } from './tax.service';
-import { CreateTaxDto } from './dto/create-tax.dto';
-import { UpdateTaxDto } from './dto/update-tax.dto';
+import { CreateTaxDto, CreateTaxWithTypesDto } from './dto/create-tax.dto';
+import { UpdateTaxDto, UpdateTaxWithTypesDto } from './dto/update-tax.dto';
 import { User } from '@/utils/decorators';
 import type { TAuthData } from '@/types/auth';
 
@@ -22,6 +23,28 @@ export class TaxController {
   create(@Body() createTaxDto: CreateTaxDto, @User() user: TAuthData) {
     createTaxDto['created_by'] = user.user_id;
     return this.taxService.create(createTaxDto);
+  }
+
+  @Post('tax-with-types')
+  createTaxWithTypes(
+    @Body() createTaxAndTypesDto: CreateTaxWithTypesDto,
+    @User() user: TAuthData,
+  ) {
+    return this.taxService.createTaxAndTaxTypes(
+      createTaxAndTypesDto,
+      user.user_id,
+    );
+  }
+
+  @Put('update-tax-with-types')
+  updateTaxWithTypes(
+    @Body() updateTaxAndTypesDto: UpdateTaxWithTypesDto,
+    @User() user: TAuthData,
+  ) {
+    return this.taxService.updateTaxAndTaxTypes(
+      updateTaxAndTypesDto,
+      user.user_id,
+    );
   }
 
   @Get()

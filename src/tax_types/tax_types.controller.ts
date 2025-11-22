@@ -21,7 +21,9 @@ export class TaxTypesController {
   @Post()
   create(@Body() createTaxTypeDto: CreateTaxTypeDto, @User() user: TAuthData) {
     createTaxTypeDto['created_by'] = user.user_id;
-    return this.taxTypesService.create(createTaxTypeDto);
+    return this.taxTypesService.create(
+      Array.isArray(createTaxTypeDto) ? createTaxTypeDto : [createTaxTypeDto],
+    );
   }
 
   @Get()
