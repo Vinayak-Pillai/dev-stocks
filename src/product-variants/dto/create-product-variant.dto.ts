@@ -8,11 +8,11 @@ import {
   IsDecimal,
 } from 'class-validator';
 import { TStatusEnum } from '@/types/global';
-import { InferSelectModel } from 'drizzle-orm';
 import { product_variants } from '@/database/schema';
+import { InferInsertModel } from 'drizzle-orm';
 
 export class CreateProductVariantDto
-  implements InferSelectModel<typeof product_variants>
+  implements InferInsertModel<typeof product_variants>
 {
   @IsInt()
   @IsNotEmpty()
