@@ -55,7 +55,7 @@ export const productStatusEnum = pgEnum('product_status_enum', ['Y', 'N', 'A']);
 export const products = pgTable('products', {
   product_id: serial('product_id').primaryKey(),
   product_name: varchar('product_name', { length: 255 }).notNull(),
-  product_code: varchar('product_code', { length: 50 }).notNull(),
+  product_code: varchar('product_code', { length: 50 }).notNull().unique(),
   product_default_uom: integer('product_default_uom')
     .notNull()
     .references(() => uom.id),
@@ -102,6 +102,35 @@ export const tax_types = pgTable('tax_types', {
   }).notNull(),
   tax_type_is_active: STATUS_ENUM('tax_type_is_active').default('Y'),
   priority: integer('priority').default(1).notNull(),
+  created_at: timestamp('created_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  created_by: integer('created_by').notNull(),
+  updated_at: timestamp('updated_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updated_by: integer('updated_by').notNull(),
+});
+
+export const product_variants = pgTable('product_variants', {
+  product_variant_id: serial('product_variant_id').primaryKey(),
+  product_id: integer('product_id')
+    .references(() => products.product_id)
+    .notNull(),
+  product_variant_name: varchar('product_variant_name', {
+    length: 255,
+  }).notNull(),
+  product_variant_uom: integer('product_variant_uom')
+    .references(() => uom.id)
+    .notNull(),
+  product_variant_price: numeric('product_variant_price', {
+    precision: 10,
+    scale: 4,
+  }).notNull(),
+  product_variant_is_active: STATUS_ENUM('product_variant_is_active').default(
+    'Y',
+  ),
+  product_variant_image: varchar('product_variant_image', { length: 500 }),
   created_at: timestamp('created_at', { withTimezone: true })
     .defaultNow()
     .notNull(),
