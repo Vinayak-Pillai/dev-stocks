@@ -23,7 +23,7 @@ export class UsersService {
         .values(createUserDto)
         .returning({ id: users.user_id });
 
-      return { status: true, records: insertUserId };
+      return insertUserId;
     } catch (error: unknown) {
       console.log(error);
       if (error instanceof Error) {
@@ -53,10 +53,7 @@ export class UsersService {
       }
       const usersData = await query;
 
-      return {
-        status: true,
-        records: usersData,
-      };
+      return usersData;
     } catch (error) {
       if (error instanceof Error) {
         throw new BadRequestException(error.message);
@@ -87,10 +84,7 @@ export class UsersService {
         .from(users)
         .where(eq(users.username, username));
 
-      return {
-        status: true,
-        records: usersData,
-      };
+      return usersData;
     } catch (error) {
       if (error instanceof Error) {
         throw new BadRequestException(error.message);
@@ -106,10 +100,7 @@ export class UsersService {
         .set(updateUserDto)
         .where(eq(users.user_id, id));
 
-      return {
-        status: true,
-        records: ``,
-      };
+      return `Data updated`;
     } catch (error) {
       if (error instanceof Error) {
         throw new BadRequestException(error.message);
@@ -125,10 +116,7 @@ export class UsersService {
         .set({ is_active: 'A' })
         .where(eq(users.user_id, id));
 
-      return {
-        status: true,
-        records: ``,
-      };
+      return `Data deleted`;
     } catch (error) {
       if (error instanceof Error) {
         throw new BadRequestException(error.message);

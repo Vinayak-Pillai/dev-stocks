@@ -39,6 +39,16 @@ export class TaxService {
     return taxId;
   }
 
+  async getTaxWithTaxTypes(id: number) {
+    const response = await this.db
+      .select()
+      .from(taxes)
+      .leftJoin(tax_types, eq(tax_types.tax_id, taxes.tax_id))
+      .where(and(eq(taxes.tax_id, id), eq(tax_types.tax_type_is_active, 'Y')));
+
+    return response;
+  }
+
   async updateTaxAndTaxTypes(
     updateTaxWithTypesDto: UpdateTaxWithTypesDto,
     userId: number,

@@ -12,25 +12,17 @@ export class AuthService {
 
   async signIn(paramsUserName: string, paramsPassword: string) {
     const userData = await this.usersService.findOne(paramsUserName, true);
-    console.log({ userData: userData.records });
 
-    if (
-      !userData ||
-      !userData.status ||
-      !userData.records ||
-      !userData.records.length
-    ) {
+    if (!userData || !userData.length) {
       throw new UnauthorizedException(
         `No user found with username: ${paramsUserName}`,
       );
     }
 
-    if (
-      !bcrypt.compareSync(paramsPassword, String(userData.records[0].password))
-    ) {
+    if (!bcrypt.compareSync(paramsPassword, String(userData[0].password))) {
       throw new UnauthorizedException(`Password doesnt match!`);
     }
-    const { username, role_id, user_id } = userData.records[0];
+    const { username, role_id, user_id } = userData[0];
     const jwtSignPayload = {
       username,
       role_id,
@@ -41,7 +33,7 @@ export class AuthService {
       status: true,
       records: {
         accessToken: await this.jwtService.signAsync(jwtSignPayload),
-        userData: userData.records[0],
+        userData: userData[0],
       },
     };
   }

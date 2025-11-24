@@ -25,6 +25,11 @@ export class TaxController {
     return this.taxService.create(createTaxDto);
   }
 
+  @Get('tax-with-types/:id')
+  async findTaxWithTypes(@Param('id') id: number) {
+    return this.taxService.getTaxWithTaxTypes(+id);
+  }
+
   @Post('tax-with-types')
   createTaxWithTypes(
     @Body() createTaxAndTypesDto: CreateTaxWithTypesDto,
