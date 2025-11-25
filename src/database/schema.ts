@@ -64,14 +64,10 @@ export const products = pgTable('products', {
   product_is_active: productStatusEnum('product_is_active')
     .default('Y')
     .notNull(),
-  created_at: timestamp('created_at', { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  created_by: integer('created_by').notNull(),
-  updated_at: timestamp('updated_at', { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  updated_by: integer('updated_by').notNull(),
+  created_at: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  created_by: integer('created_by'),
+  updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+  updated_by: integer('updated_by'),
 });
 
 export const taxes = pgTable('taxes', {
@@ -80,14 +76,10 @@ export const taxes = pgTable('taxes', {
   tax_code: varchar('tax_code', { length: 50 }).notNull().unique(),
   tax_is_active: STATUS_ENUM('tax_is_active').default('Y').notNull(),
   description: varchar('tax_description'),
-  created_at: timestamp('created_at', { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  created_by: integer('created_by').notNull(),
-  updated_at: timestamp('updated_at', { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  updated_by: integer('updated_by').notNull(),
+  created_at: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  created_by: integer('created_by'),
+  updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+  updated_by: integer('updated_by'),
 });
 
 export const tax_types = pgTable('tax_types', {
@@ -102,14 +94,10 @@ export const tax_types = pgTable('tax_types', {
   }).notNull(),
   tax_type_is_active: STATUS_ENUM('tax_type_is_active').default('Y'),
   priority: integer('priority').default(1).notNull(),
-  created_at: timestamp('created_at', { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  created_by: integer('created_by').notNull(),
-  updated_at: timestamp('updated_at', { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  updated_by: integer('updated_by').notNull(),
+  created_at: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  created_by: integer('created_by'),
+  updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+  updated_by: integer('updated_by'),
 });
 
 export const product_variants = pgTable('product_variants', {
@@ -131,12 +119,8 @@ export const product_variants = pgTable('product_variants', {
     'Y',
   ),
   product_variant_image: varchar('product_variant_image', { length: 500 }),
-  created_at: timestamp('created_at', { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  created_by: integer('created_by').notNull(),
-  updated_at: timestamp('updated_at', { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  updated_by: integer('updated_by').notNull(),
+  created_at: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  created_by: integer('created_by'),
+  updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+  updated_by: integer('updated_by'),
 });

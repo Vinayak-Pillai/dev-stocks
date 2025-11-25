@@ -1,4 +1,3 @@
-import { tax_types } from '@/database/schema';
 import { TStatusEnum } from '@/types/global';
 import {
   IsDecimal,
@@ -9,13 +8,11 @@ import {
   IsOptional,
   IsString,
   MaxLength,
-  Min,
 } from 'class-validator';
-import { InferInsertModel } from 'drizzle-orm';
 
-export class CreateTaxTypeDto implements InferInsertModel<typeof tax_types> {
+export class CreateTaxTypeDto {
   @IsNumber()
-  @Min(1)
+  @IsOptional()
   tax_id: number;
 
   @IsString()

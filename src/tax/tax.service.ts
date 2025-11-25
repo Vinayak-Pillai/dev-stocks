@@ -27,6 +27,7 @@ export class TaxService {
     createTaxWithTypesDto: CreateTaxWithTypesDto,
     userId: number,
   ) {
+    createTaxWithTypesDto.tax['created_by'] = userId;
     const taxId = await this.create(createTaxWithTypesDto.tax);
     if (!taxId) throw new Error('Tax Creation Failed');
 
@@ -41,12 +42,46 @@ export class TaxService {
 
   async getTaxWithTaxTypes(id: number) {
     const response = await this.db
-      .select()
+      .select({
+        tax: {
+          tax_id: taxes.tax_id,
+          tax_name: taxes.tax_name,
+          tax_code: taxes.tax_code,
+          description: taxes.description,
+          tax_is_active: taxes.tax_is_active,
+        },
+        tax_types: {
+          tax_type_id: tax_types.tax_type_id,
+          tax_type_name: tax_types.tax_type_name,
+          tax_type_percentage: tax_types.tax_type_percentage,
+          priority: tax_types.priority,
+          tax_type_is_active: tax_types.tax_type_is_active,
+        },
+      })
       .from(taxes)
       .leftJoin(tax_types, eq(tax_types.tax_id, taxes.tax_id))
       .where(and(eq(taxes.tax_id, id), eq(tax_types.tax_type_is_active, 'Y')));
 
-    return response;
+    const data: {
+      tax: (typeof response)[number]['tax'];
+      tax_types: (typeof response)[number]['tax_types'][];
+    } = {
+      tax: {
+        tax_id: 0,
+        tax_name: '',
+        tax_code: '',
+        tax_is_active: 'A',
+        description: '',
+      },
+      tax_types: [],
+    };
+    if (response.length) {
+      data['tax'] = response[0].tax;
+      data['tax_types'] = response.map((taxType) => {
+        return taxType.tax_types;
+      });
+    }
+    return data;
   }
 
   async updateTaxAndTaxTypes(
@@ -61,7 +96,10 @@ export class TaxService {
         .where(eq(taxes.tax_id, updateTaxWithTypesDto.tax.tax_id))
         .returning();
 
-      if (!taxUpdate) throw new Error('Tax update failed');
+      if (!taxUpdate) {
+        trx.rollback();
+        throw new Error('Tax update failed');
+      }
 
       await this.db
         .update(tax_types)
@@ -86,9 +124,8 @@ export class TaxService {
           await this.taxTypesService.create([createDto], trx);
         }
       }
-
-      return 'Tax updated';
     });
+    return 'Tax updated';
   }
 
   async findAll(status: 'Y' | 'N' | '') {

@@ -30,11 +30,8 @@ export class AuthService {
     };
 
     return {
-      status: true,
-      records: {
-        accessToken: await this.jwtService.signAsync(jwtSignPayload),
-        userData: userData[0],
-      },
+      accessToken: await this.jwtService.signAsync(jwtSignPayload),
+      userData: userData[0],
     };
   }
 }
