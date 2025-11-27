@@ -138,6 +138,7 @@ export class TaxService {
       .select({
         tax_id: taxes.tax_id,
         tax_name: taxes.tax_name,
+        tax_code: taxes.tax_code,
         tax_description: taxes.description,
         tax_is_active: taxes.tax_is_active,
       })
