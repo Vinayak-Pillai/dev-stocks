@@ -25,7 +25,7 @@ export class CreateProductVariantDto
 
   @IsInt()
   @IsNotEmpty()
-  product_variant_uom: number;
+  product_variant_uom_id: number;
 
   @IsNotEmpty()
   @IsDecimal({ decimal_digits: '0,4', force_decimal: false })

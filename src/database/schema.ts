@@ -108,7 +108,7 @@ export const product_variants = pgTable('product_variants', {
   product_variant_name: varchar('product_variant_name', {
     length: 255,
   }).notNull(),
-  product_variant_uom: integer('product_variant_uom')
+  product_variant_uom_id: integer('product_variant_uom_id')
     .references(() => uom.id)
     .notNull(),
   product_variant_price: numeric('product_variant_price', {
