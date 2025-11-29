@@ -124,3 +124,22 @@ export const product_variants = pgTable('product_variants', {
   updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow(),
   updated_by: integer('updated_by'),
 });
+
+export const product_variant_prices = pgTable('product_variant_prices', {
+  pvp_id: serial('product_variant_price_id').primaryKey(),
+  pvp_pv_id: integer('product_variant_id')
+    .references(() => product_variants.product_variant_id)
+    .notNull(),
+  pvp_tax_type_id: integer('product_variant_type_id')
+    .references(() => tax_types.tax_id)
+    .notNull(),
+  pvp_tax_price: numeric('product_variant_price', {
+    precision: 10,
+    scale: 4,
+  }).notNull(),
+  pvp_is_active: STATUS_ENUM('product_variant_price_is_active').default('Y'),
+  created_at: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  created_by: integer('created_by'),
+  updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+  updated_by: integer('updated_by'),
+});

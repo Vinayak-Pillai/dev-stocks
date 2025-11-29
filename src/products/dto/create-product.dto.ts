@@ -48,7 +48,7 @@ export class CreateProductVariantsDto
   implements InferInsertModel<typeof product_variants>
 {
   @IsInt()
-  @IsNotEmpty()
+  @IsOptional()
   product_id: number;
 
   @IsString()
@@ -58,6 +58,10 @@ export class CreateProductVariantsDto
   @IsInt()
   @IsNotEmpty()
   product_variant_uom_id: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  product_variant_tax_id: number;
 
   @Matches(/^\d{1,6}(\.\d{1,4})?$/, {
     message:

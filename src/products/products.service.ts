@@ -30,16 +30,20 @@ export class ProductsService {
   ) {
     const productId = await this.create(createProductWithVariants.product);
 
-    if (!productId?.length || !productId[0].id)
+    if (!productId?.length || !productId[0].id) {
       throw new Error('Failed to create product');
-
-    createProductWithVariants.product_variants.forEach((productVariants) => {
-      productVariants['product_id'] = productId[0].id;
-      productVariants['created_by'] = user.user_id;
+    }
+    createProductWithVariants.product_variants.forEach((productVariant) => {
+      productVariant['product_id'] = productId[0].id;
+      productVariant['created_by'] = user.user_id;
     });
+
     await this.db
       .insert(product_variants)
-      .values(createProductWithVariants.product_variants);
+      .values(createProductWithVariants.product_variants)
+      .returning({ id: product_variants.product_variant_id });
+
+    return productId;
   }
 
   async findProductWithVariants(id: number) {
