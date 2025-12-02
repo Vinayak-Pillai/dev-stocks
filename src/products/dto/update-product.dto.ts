@@ -40,6 +40,10 @@ export class UpdateProductVariantsDto extends PartialType(
   @IsNotEmpty()
   product_variant_uom_id: number;
 
+  @IsInt()
+  @IsNotEmpty()
+  product_variant_tax_id: number;
+
   @Matches(/^\d{1,6}(\.\d{1,4})?$/, {
     message:
       'product_variant_price must be a decimal with up to 10 digits total and 4 decimals',

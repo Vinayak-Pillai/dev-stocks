@@ -22,7 +22,7 @@ export class CreateProductDto implements InferInsertModel<typeof products> {
   product_code: string;
 
   @IsInt()
-  product_default_uom: number;
+  product_default_uom_id: number;
 
   @IsString()
   @IsOptional()
@@ -37,6 +37,7 @@ export class CreateProductDto implements InferInsertModel<typeof products> {
   product_is_active?: 'Y' | 'N' | 'A';
 
   @IsInt()
+  @IsOptional()
   created_by: number;
 
   @IsOptional()

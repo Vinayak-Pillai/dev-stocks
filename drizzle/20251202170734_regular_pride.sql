@@ -1,0 +1,3 @@
+ALTER TABLE "product_variant_prices" DROP CONSTRAINT "product_variant_prices_product_variant_type_id_tax_types_tax_id_fk";
+--> statement-breakpoint
+ALTER TABLE "product_variant_prices" ADD CONSTRAINT "product_variant_prices_product_variant_type_id_tax_types_tax_type_id_fk" FOREIGN KEY ("product_variant_type_id") REFERENCES "public"."tax_types"("tax_type_id") ON DELETE no action ON UPDATE no action;

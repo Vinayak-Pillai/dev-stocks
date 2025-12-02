@@ -27,6 +27,10 @@ export class CreateProductVariantDto
   @IsNotEmpty()
   product_variant_uom_id: number;
 
+  @IsInt()
+  @IsNotEmpty()
+  product_variant_tax_id: number;
+
   @IsNotEmpty()
   @IsDecimal({ decimal_digits: '0,4', force_decimal: false })
   product_variant_price: string;

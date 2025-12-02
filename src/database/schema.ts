@@ -56,7 +56,7 @@ export const products = pgTable('products', {
   product_id: serial('product_id').primaryKey(),
   product_name: varchar('product_name', { length: 255 }).notNull(),
   product_code: varchar('product_code', { length: 50 }).notNull().unique(),
-  product_default_uom: integer('product_default_uom')
+  product_default_uom_id: integer('product_default_uom_id')
     .notNull()
     .references(() => uom.id),
   product_description: varchar('product_description', { length: 255 }),
@@ -111,6 +111,9 @@ export const product_variants = pgTable('product_variants', {
   product_variant_uom_id: integer('product_variant_uom_id')
     .references(() => uom.id)
     .notNull(),
+  product_variant_tax_id: integer('product_variant_tax_id')
+    .references(() => taxes.tax_id)
+    .notNull(),
   product_variant_price: numeric('product_variant_price', {
     precision: 10,
     scale: 4,
@@ -131,7 +134,7 @@ export const product_variant_prices = pgTable('product_variant_prices', {
     .references(() => product_variants.product_variant_id)
     .notNull(),
   pvp_tax_type_id: integer('product_variant_type_id')
-    .references(() => tax_types.tax_id)
+    .references(() => tax_types.tax_type_id)
     .notNull(),
   pvp_tax_price: numeric('product_variant_price', {
     precision: 10,

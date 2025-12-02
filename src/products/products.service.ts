@@ -11,6 +11,7 @@ import { DRIZZLE, type TDrizzleDB } from '@/database/database.module';
 import { product_variants, products } from '@/database/schema';
 import { and, eq } from 'drizzle-orm';
 import { TAuthData } from '@/types/auth';
+import { TStatusEnum } from '@/types/global';
 
 @Injectable()
 export class ProductsService {
@@ -54,6 +55,8 @@ export class ProductsService {
           product_name: products.product_name,
           product_code: products.product_code,
           product_image: products.product_image,
+          product_default_uom_id: products.product_default_uom_id,
+          product_description: products.product_description,
           product_is_active: products.product_is_active,
         },
         product_variants: {
@@ -62,6 +65,9 @@ export class ProductsService {
           product_variant_name: product_variants.product_variant_name,
           product_variant_image: product_variants.product_variant_image,
           product_variant_price: product_variants.product_variant_price,
+          product_variant_uom_id: product_variants.product_variant_uom_id,
+          product_variant_tax_id: product_variants.product_variant_tax_id,
+          product_variant_is_active: product_variants.product_variant_is_active,
         },
       })
       .from(products)
@@ -100,10 +106,15 @@ export class ProductsService {
   ) {
     await this.db.transaction(async (tx) => {
       await this.update(id, updateProductWithVariants.product, tx);
+      await tx
+        .update(product_variants)
+        .set({ product_variant_is_active: TStatusEnum.A })
+        .where(eq(product_variants.product_id, id));
 
       for (const productVariant of updateProductWithVariants.product_variants) {
         productVariant['updated_by'] = user.user_id;
         const { product_variant_id = null, ...rest } = productVariant;
+        rest['product_id'] = id;
         if (product_variant_id) {
           await tx
             .update(product_variants)
@@ -116,6 +127,8 @@ export class ProductsService {
         }
       }
     });
+
+    return `${id} is updated`;
   }
 
   async findAll(status: 'Y' | 'N' | '' = '') {

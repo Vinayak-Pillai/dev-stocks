@@ -1,0 +1,2 @@
+ALTER TABLE "product_variants" ADD COLUMN "product_variant_tax_id" integer NOT NULL;--> statement-breakpoint
+ALTER TABLE "product_variants" ADD CONSTRAINT "product_variants_product_variant_tax_id_taxes_tax_id_fk" FOREIGN KEY ("product_variant_tax_id") REFERENCES "public"."taxes"("tax_id") ON DELETE no action ON UPDATE no action;
