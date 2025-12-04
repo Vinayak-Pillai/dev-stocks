@@ -15,17 +15,12 @@ export class RolesService {
   }
 
   async findAll(status: 'Y' | 'N' | '') {
-    console.log({ status });
     const rolesData = await this.db
       .select()
       .from(roles)
       .where(status ? eq(roles.role_is_active, status) : undefined);
 
-    if (!rolesData || !rolesData.length) {
-      return { status: false, message: 'No roles', records: rolesData };
-    }
-
-    return { status: true, records: rolesData, message: 'Records fetched' };
+    return rolesData;
   }
 
   findOne(id: number) {

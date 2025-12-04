@@ -17,6 +17,7 @@ import { join } from 'path';
 import { TaxModule } from './tax/tax.module';
 import { TaxTypesModule } from './tax_types/tax_types.module';
 import { ProductVariantsModule } from './product-variants/product-variants.module';
+import { TreatmentsModule } from './treatments/treatments.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { ProductVariantsModule } from './product-variants/product-variants.modul
     TaxModule,
     TaxTypesModule,
     ProductVariantsModule,
+    TreatmentsModule,
   ],
   controllers: [AppController],
   providers: [

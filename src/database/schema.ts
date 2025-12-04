@@ -59,6 +59,9 @@ export const products = pgTable('products', {
   product_default_uom_id: integer('product_default_uom_id')
     .notNull()
     .references(() => uom.id),
+  product_default_tax_id: integer('product_default_tax_id')
+    .notNull()
+    .references(() => taxes.tax_id),
   product_description: varchar('product_description', { length: 255 }),
   product_image: varchar('product_image', { length: 500 }),
   product_is_active: productStatusEnum('product_is_active')
@@ -141,6 +144,39 @@ export const product_variant_prices = pgTable('product_variant_prices', {
     scale: 4,
   }).notNull(),
   pvp_is_active: STATUS_ENUM('product_variant_price_is_active').default('Y'),
+  created_at: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  created_by: integer('created_by'),
+  updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+  updated_by: integer('updated_by'),
+});
+
+export const treatments = pgTable('treatments', {
+  treatment_id: serial('treatment_id').primaryKey(),
+  treatment_name: varchar('treatment_name', { length: 500 }),
+  treatment_description: varchar('treatment_description', { length: 500 }),
+  treatment_cost: numeric('treatment_cost', {
+    precision: 10,
+    scale: 4,
+  }).notNull(),
+  treatment_is_active: STATUS_ENUM('treatment_is_active').default('Y'),
+  created_at: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  created_by: integer('created_by'),
+  updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+  updated_by: integer('updated_by'),
+});
+
+export const treatment_products = pgTable('treatment_products', {
+  treatment_product_id: serial('treatment_product_id').primaryKey(),
+  treatment_id: integer('treatment_id')
+    .references(() => treatments.treatment_id)
+    .notNull(),
+  product_id: integer('product_id')
+    .references(() => products.product_id)
+    .notNull(),
+  quantity_to_use: integer('quantity_to_use').notNull().default(1),
+  treatment_product_is_active: STATUS_ENUM(
+    'treatment_product_is_active',
+  ).default('Y'),
   created_at: timestamp('created_at', { withTimezone: true }).defaultNow(),
   created_by: integer('created_by'),
   updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow(),

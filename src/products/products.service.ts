@@ -56,6 +56,7 @@ export class ProductsService {
           product_code: products.product_code,
           product_image: products.product_image,
           product_default_uom_id: products.product_default_uom_id,
+          product_default_tax_id: products.product_default_tax_id,
           product_description: products.product_description,
           product_is_active: products.product_is_active,
         },

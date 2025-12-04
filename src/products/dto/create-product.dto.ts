@@ -24,6 +24,9 @@ export class CreateProductDto implements InferInsertModel<typeof products> {
   @IsInt()
   product_default_uom_id: number;
 
+  @IsInt()
+  product_default_tax_id: number;
+
   @IsString()
   @IsOptional()
   product_description?: string;
