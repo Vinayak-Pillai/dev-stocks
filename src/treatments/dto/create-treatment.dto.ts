@@ -44,7 +44,7 @@ export class CreateTreatmenProductDto
   treatment_id: number;
 
   @IsInt()
-  product_id: number;
+  product_variant_id: number;
 
   @IsInt()
   quantity_to_use: number;
@@ -54,6 +54,7 @@ export class CreateTreatmenProductDto
   treatment_product_is_active?: 'Y' | 'N' | 'A';
 
   @IsInt()
+  @IsOptional()
   created_by: number;
 
   @IsOptional()

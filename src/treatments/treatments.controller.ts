@@ -35,6 +35,11 @@ export class TreatmentsController {
     return this.treatmentsService.findOne(+id);
   }
 
+  @Get('treatment-kit-products/:id')
+  findTreatmentkitProducts(@Param('id') id: string) {
+    return this.treatmentsService.findTreatmentkitProducts(+id);
+  }
+
   @Patch(':id')
   update(
     @Param('id') id: string,

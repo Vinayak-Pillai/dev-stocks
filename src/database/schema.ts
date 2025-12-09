@@ -170,8 +170,8 @@ export const treatment_products = pgTable('treatment_products', {
   treatment_id: integer('treatment_id')
     .references(() => treatments.treatment_id)
     .notNull(),
-  product_id: integer('product_id')
-    .references(() => products.product_id)
+  product_variant_id: integer('product_variant_id')
+    .references(() => product_variants.product_variant_id)
     .notNull(),
   quantity_to_use: integer('quantity_to_use').notNull().default(1),
   treatment_product_is_active: STATUS_ENUM(

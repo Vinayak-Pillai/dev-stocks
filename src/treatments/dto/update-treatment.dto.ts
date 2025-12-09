@@ -29,7 +29,7 @@ export class UpdateTreatmentProductDto extends PartialType(CreateTreatmentDto) {
   treatment_id: number;
 
   @IsInt()
-  product_id: number;
+  product_variant_id: number;
 
   @IsInt()
   @IsNotEmpty()

@@ -3,9 +3,15 @@ import { CreateTreatmentWithProductDto } from './dto/create-treatment.dto';
 import { UpdateTreatmentWithProductDto } from './dto/update-treatment.dto';
 import type { TAuthData } from '@/types/auth';
 import { DRIZZLE, type TDrizzleDB } from '@/database/database.module';
-import { treatment_products, treatments } from '@/database/schema';
-import { eq } from 'drizzle-orm';
+import {
+  product_variants,
+  tax_types,
+  treatment_products,
+  treatments,
+} from '@/database/schema';
+import { and, eq } from 'drizzle-orm';
 import { TStatusEnum } from '@/types/global';
+import { inArray } from 'drizzle-orm';
 
 @Injectable()
 export class TreatmentsService {
@@ -14,6 +20,7 @@ export class TreatmentsService {
     createTreatmentDto: CreateTreatmentWithProductDto,
     user: TAuthData,
   ) {
+    createTreatmentDto.treatment['created_by'] = user.user_id;
     await this.db.transaction(async (tx) => {
       const treatmentId = await tx
         .insert(treatments)
@@ -26,8 +33,8 @@ export class TreatmentsService {
       }
 
       createTreatmentDto.treatment_products.forEach((treatmentProduct) => {
-        treatmentProduct['product_id'] = treatmentId[0].id;
-        treatmentProduct['created_by'] = user.user_id;
+        treatmentProduct['treatment_id'] = treatmentId[0].id;
+        treatmentProduct['created_by'] = Number(user.user_id);
       });
       const treatmentProductsId = await tx
         .insert(treatment_products)
@@ -69,7 +76,7 @@ export class TreatmentsService {
         },
         treatment_products: {
           treatment_product_id: treatment_products.treatment_product_id,
-          product_id: treatment_products.product_id,
+          product_variant_id: treatment_products.product_variant_id,
           quantity_to_use: treatment_products.quantity_to_use,
           treatment_product_is_active:
             treatment_products.treatment_product_is_active,
@@ -84,12 +91,80 @@ export class TreatmentsService {
 
     const data: {
       treatment: (typeof response)[number]['treatment'];
-      treatment_products: (typeof response)[number]['treatment_products'];
+      treatment_products: (typeof response)[number]['treatment_products'][];
     } = {
       treatment: response[0].treatment,
-      treatment_products: response[0].treatment_products,
+      treatment_products: response.map((item) => item.treatment_products) || [],
     };
     return data;
+  }
+
+  async findTreatmentkitProducts(id: number) {
+    const response = await this.db
+      .select({
+        product_variant_id: treatment_products.product_variant_id,
+        quantity: treatment_products.quantity_to_use,
+        product_name: product_variants.product_variant_name,
+        price: product_variants.product_variant_price,
+        tax_id: product_variants.product_variant_tax_id,
+      })
+      .from(treatment_products)
+      .leftJoin(
+        product_variants,
+        eq(
+          product_variants.product_variant_id,
+          treatment_products.product_variant_id,
+        ),
+      )
+      .where(
+        and(
+          eq(treatment_products.treatment_id, id),
+          eq(treatment_products.treatment_product_is_active, TStatusEnum.Y),
+        ),
+      );
+
+    console.log(
+      this.db
+        .select({
+          product_variant_id: treatment_products.product_variant_id,
+          quantity: treatment_products.quantity_to_use,
+          product_name: product_variants.product_variant_name,
+          price: product_variants.product_variant_price,
+          tax_id: product_variants.product_variant_tax_id,
+        })
+        .from(treatment_products)
+        .leftJoin(
+          product_variants,
+          eq(
+            product_variants.product_variant_id,
+            treatment_products.product_variant_id,
+          ),
+        )
+        .where(
+          and(
+            eq(treatment_products.treatment_id, id),
+            eq(treatment_products.treatment_product_is_active, TStatusEnum.A),
+          ),
+        )
+        .toSQL(),
+    );
+
+    if (response.length) {
+      const taxTypesToFetch: number[] = response.map((tax) => {
+        return Number(tax.tax_id);
+      });
+
+      if (taxTypesToFetch.length) {
+        const taxTypes = await this.db
+          .select()
+          .from(tax_types)
+          .where(inArray(tax_types.tax_id, taxTypesToFetch));
+
+        console.log({ taxTypes });
+      }
+    }
+
+    return response;
   }
 
   async update(
@@ -102,6 +177,11 @@ export class TreatmentsService {
         .update(treatments)
         .set(updateTreatmentDto.treatment)
         .where(eq(treatments.treatment_id, id));
+
+      await tx
+        .update(treatment_products)
+        .set({ treatment_product_is_active: TStatusEnum.A })
+        .where(eq(treatment_products.treatment_id, id));
 
       for (const treatmentProduct of updateTreatmentDto.treatment_products) {
         treatmentProduct['updated_by'] = user_id;
